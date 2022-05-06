@@ -15,16 +15,16 @@
   "repository": "cliffkoh/import-sort-style-module-scoped",
   "license": "ISC",
   "dependencies": {
-    "import-sort-style": "^4.2.0"
+    "import-sort-style": "^6.0.0"
   },
   "devDependencies": {
-    "@types/chai": "^4.0.0",
-    "@types/mocha": "^2.2.41",
-    "@types/node": "^8",
-    "chai": "^4.0.2",
-    "mocha": "^4",
-    "ts-node": "^3.0.6",
-    "tslint": "^5.4.3",
-    "typescript": "^2.3.4"
+    "@types/chai": "^4.3.1",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "^17.0.31",
+    "chai": "^4.3.6",
+    "mocha": "^10.0.0",
+    "ts-node": "^10.7.0",
+    "tslint": "^5.20.1",
+    "typescript": "^4.6.4"
   }
 }

@@ -1,81 +1,112 @@
-import { IStyleAPI, IStyleItem } from 'import-sort-style';
+import { IStyleAPI, IStyleItem } from "import-sort-style";
 
 interface IImport {
-  start: number;
-  end: number;
-  importStart?: number;
-  importEnd?: number;
-  type: ImportType;
-  moduleName: string;
-  defaultMember?: string;
-  namespaceMember?: string;
-  namedMembers: NamedMember[];
+    start: number;
+    end: number;
+    importStart?: number;
+    importEnd?: number;
+    type: ImportType;
+    moduleName: string;
+    defaultMember?: string;
+    namespaceMember?: string;
+    namedMembers: NamedMember[];
 }
 
-declare type ImportType = 'import' | 'require' | 'import-equals' | 'import-type';
+declare type ImportType =
+    | "import"
+    | "require"
+    | "import-equals"
+    | "import-type";
 declare type NamedMember = {
-  name: string;
-  alias: string;
+    name: string;
+    alias: string;
 };
 
 export default function (styleApi: IStyleAPI): IStyleItem[] {
-  const {
-    alias,
-    and,
-    not,
-    dotSegmentCount,
-    hasNoMember,
-    isAbsoluteModule,
-    isNodeModule,
-    isRelativeModule,
-    moduleName,
-    unicode,
-  } = styleApi;
+    const {
+        alias,
+        and,
+        not,
+        dotSegmentCount,
+        hasNoMember,
+        isAbsoluteModule,
+        isNodeModule,
+        isRelativeModule,
+        moduleName,
+        unicode,
+    } = styleApi;
 
-  function isScopedModule(imported: IImport) {
-    return imported.moduleName[0] === '@';
-  }
+    function isScopedModule(imported: IImport) {
+        return imported.moduleName[0] === "@";
+    }
 
-  return [
-    // import "foo"
-    { match: and(hasNoMember, isAbsoluteModule) },
-    { separator: true },
+    function isProjectModule(imported: IImport) {
+        return imported.moduleName[0] === "~";
+    }
 
-    // import "./foo"
-    { match: and(hasNoMember, isRelativeModule) },
-    { separator: true },
+    function isAtRoot(imported: IImport) {
+        return imported.moduleName[0] === "/";
+    }
 
-    // import … from "fs";
-    {
-      match: isNodeModule,
-      sort: moduleName(unicode),
-      sortNamedMembers: alias(unicode),
-    },
-    { separator: true },
+    return [
+        // import "foo"
+        { match: and(hasNoMember, isAbsoluteModule) },
+        { separator: true },
 
-    // import … from "foo";
-    {
-      match: and(isAbsoluteModule, not(isScopedModule)),
-      sort: moduleName(unicode),
-      sortNamedMembers: alias(unicode),
-    },
-    { separator: true },
+        // import "./foo"
+        { match: and(hasNoMember, isRelativeModule) },
+        { separator: true },
 
-    // import … from "foo";
-    {
-      match: isScopedModule,
-      sort: moduleName(unicode),
-      sortNamedMembers: alias(unicode),
-    },
-    { separator: true },
+        // import … from "fs";
+        {
+            match: isNodeModule,
+            sort: moduleName(unicode),
+            sortNamedMembers: alias(unicode),
+        },
+        { separator: true },
 
-    // import … from "./foo";
-    // import … from "../foo";
-    {
-      match: isRelativeModule,
-      sort: [dotSegmentCount, moduleName(unicode)],
-      sortNamedMembers: alias(unicode),
-    },
-    { separator: true },
-  ];
+        // import … from "foo";
+        {
+            match: and(
+                isAbsoluteModule,
+                not(isScopedModule),
+                not(isProjectModule),
+                not(isAtRoot)
+            ),
+            sort: moduleName(unicode),
+            sortNamedMembers: alias(unicode),
+        },
+        { separator: true },
+
+        // import … from "foo";
+        {
+            match: isScopedModule,
+            sort: moduleName(unicode),
+            sortNamedMembers: alias(unicode),
+        },
+        { separator: true },
+
+        {
+            match: isProjectModule,
+            sort: moduleName(unicode),
+            sortNamedMembers: alias(unicode),
+        },
+        { separator: true },
+
+        {
+            match: isAtRoot,
+            sort: moduleName(unicode),
+            sortNamedMembers: alias(unicode),
+        },
+        { separator: true },
+
+        // import … from "./foo";
+        // import … from "../foo";
+        {
+            match: isRelativeModule,
+            sort: [dotSegmentCount, moduleName(unicode)],
+            sortNamedMembers: alias(unicode),
+        },
+        { separator: true },
+    ];
 }
