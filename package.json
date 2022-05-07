@@ -1,7 +1,7 @@
 {
-  "name": "import-sort-style-module-scoped",
-  "version": "1.0.3",
-  "description": "An import-sort style that groups and sorts by module, with support for scoped modules.",
+  "name": "import-sort-style-module-local",
+  "version": "1.0.0",
+  "description": "An import-sort style that groups and sorts by module, with support for local files.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
@@ -11,8 +11,8 @@
     "test": "mocha --require ts-node/register --recursive \"test/**/*.ts\"",
     "test:watch": "mocha -w --require ts-node/register --recursive \"test/**/*.ts\""
   },
-  "author": "Cliff Koh (https://github.com/cliffkoh)",
-  "repository": "cliffkoh/import-sort-style-module-scoped",
+  "author": "Michael Bourke (michael@iter8ve.com)",
+  "repository": "iter8ve/import-sort-style-module-local",
   "license": "ISC",
   "dependencies": {
     "import-sort-style": "^6.0.0"
